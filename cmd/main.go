@@ -3,26 +3,28 @@ package main
 import (
 	"os"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+
 	"github.com/sirupsen/logrus"
 
 	todo "github.com/nikolasmelui/golang_todo_app"
 	"github.com/nikolasmelui/golang_todo_app/pkg/handler"
 	"github.com/nikolasmelui/golang_todo_app/pkg/repository"
 	"github.com/nikolasmelui/golang_todo_app/pkg/service"
+
+	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
-	if err := initConfig(); err != nil {
-		logrus.Fatalf("error initializing configs: %s", err.Error())
-	}
-
 	if err := godotenv.Load(); err != nil {
 		logrus.Fatalf("error loading env variables: %s", err.Error())
+	}
+
+	if err := initConfig(); err != nil {
+		logrus.Fatalf("error initializing configs: %s", err.Error())
 	}
 
 	db, err := repository.NewPostgresDB(repository.Config{
@@ -31,7 +33,7 @@ func main() {
 		User:     viper.GetString("db.user"),
 		DBName:   viper.GetString("db.db_name"),
 		SSLMode:  viper.GetString("db.ssl_mode"),
-		Password: os.Getenv("DB_PASSWORD"),
+		Password: viper.GetString("db.password"),
 	})
 
 	if err != nil {
@@ -51,5 +53,7 @@ func main() {
 func initConfig() error {
 	viper.AddConfigPath("configs")
 	viper.SetConfigName("config")
+	viper.Set("db.password", os.Getenv("DB_PASSWORD"))
+	viper.Set("security.salt", os.Getenv("SECURITY_SALT"))
 	return viper.ReadInConfig()
 }
