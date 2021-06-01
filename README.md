@@ -1,6 +1,10 @@
 # TODO GO APPLICATION
 
-Need to install [migrate](https://github.com/golang-migrate/migrate) first
+Simple TODO application (backend) using Go
+
+## Migrations
+
+> Need to install [migrate](https://github.com/golang-migrate/migrate) first
 
 - CREATE MIGRATION:
 
