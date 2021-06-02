@@ -55,5 +55,6 @@ func initConfig() error {
 	viper.SetConfigName("config")
 	viper.Set("db.password", os.Getenv("DB_PASSWORD"))
 	viper.Set("security.salt", os.Getenv("SECURITY_SALT"))
+	viper.Set("security.signing_key", os.Getenv("SECURITY_SIGNING_KEY"))
 	return viper.ReadInConfig()
 }
